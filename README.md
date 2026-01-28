@@ -49,16 +49,26 @@ Code smells que hacen que cualquier cambio sea costoso e incluso arriesgado al o
 
 Code smells en los que cambios en una unidad fuerzan cambios en otra que tiene un acoplamiento muy fuerte.
 
-Pronto...
+- [Feature envy](src/code-smells/couplers/feature-envy.readme.md)
+- [Inappropriate intimacy](src/code-smells/couplers/inappropriate-intimacy.readme.md)
+- [Message chains](src/code-smells/couplers/message-chains.readme.md)
+- [Middleman](src/code-smells/couplers/middleman.readme.md)
 
 #### Dispensables
 
 Code smells debidos a código innecesario, que introduce ruido dificultando la inteligibilidad del código.
 
-Pronto...
+- [Comments](src/code-smells/dispensables/comments.readme.md)
+- [Data class](src/code-smells/dispensables/data-class.readme.md)
+- [Dead code](src/code-smells/dispensables/dead-code.readme.md)
+- [Duplicated code](src/code-smells/dispensables/duplicated-code.readme.md)
+- [Lazy class](src/code-smells/dispensables/lazy-class.readme.md)
 
 #### OOP Abusers
 
 Code smells debido a la aplicación inadecuada de la orientación a objetos.
 
-Pronto...
+- [Alternative classes different interfaces](src/code-smells/oop-abusers/alternative-classes-different-interfaces.readme.md)
+- [Refused bequest](src/code-smells/oop-abusers/refused-bequest.readme.md)
+- [Switch statements](src/code-smells/oop-abusers/switch-statements.readme.md)
+- [Temporal instance variables](src/code-smells/oop-abusers/temporal-instance-variables.readme.md)
