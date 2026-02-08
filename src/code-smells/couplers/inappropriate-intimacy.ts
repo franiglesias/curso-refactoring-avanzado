@@ -1,13 +1,3 @@
-// Code smell: Inappropriate Intimacy [Intimidad inapropiada].
-// Team y Manager exponen y modifican el estado
-// interno del otro, creando un acoplamiento fuerte y diseños frágiles.
-
-// Ejercicio: Añade una traza de auditoría cuando cambien los presupuestos
-// y aplica reglas de presupuesto mínimo.
-
-// Como Team y Manager tocan libremente los campos del otro, tendrás que esparcir
-// comprobaciones y registros en muchos lugares, aumentando el acoplamiento y las regresiones.
-
 export class Team {
   private name: string
   private budget: Budget

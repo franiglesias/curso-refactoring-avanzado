@@ -1,4 +1,4 @@
-export class Cfg {
+export class C {
   u: string
   p: string
   s: string
@@ -11,7 +11,7 @@ export class Cfg {
     this.e = e
   }
 
-  connStr(): string {
+  cnx(): string {
     return `${this.u}:${this.p}@${this.s}/${this.e}`
   }
 }
