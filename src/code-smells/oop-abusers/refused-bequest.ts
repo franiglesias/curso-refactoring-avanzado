@@ -1,14 +1,4 @@
-interface Resettable {
-  reset(): void
-}
-
-interface Controller {
-  start(): void
-
-  stop(): void
-}
-
-class BaseController implements Controller, Resettable {
+class BaseController {
   start(): void {
     console.log('starting')
   }
@@ -22,7 +12,7 @@ class BaseController implements Controller, Resettable {
   }
 }
 
-export class ReadOnlyController implements Controller {
+export class ReadOnlyController extends BaseController {
   start(): void {
   }
 
@@ -31,7 +21,7 @@ export class ReadOnlyController implements Controller {
 }
 
 export function demoRefusedBequest(readonly: boolean): void {
-  const controller: Controller = readonly ? new ReadOnlyController() : new BaseController()
+  const controller: BaseController = readonly ? new ReadOnlyController() : new BaseController()
   controller.start()
   controller.stop()
 }
