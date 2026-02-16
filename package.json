@@ -20,7 +20,8 @@
     "lint:format": "prettier --check .",
     "env:from-dist": "node scripts/generate-env.mjs",
     "env:prod": "NODE_ENV=production node scripts/generate-env.mjs --out .env",
-    "env:test": "NODE_ENV=test node scripts/generate-env.mjs --out .env.test --set PORT=3333 --set STORAGE_ADAPTER=memory --set SQLITE_DB_PATH=./data/inventory.test.db --set NODE_ENV=test"
+    "env:test": "NODE_ENV=test node scripts/generate-env.mjs --out .env.test --set PORT=3333 --set STORAGE_ADAPTER=memory --set SQLITE_DB_PATH=./data/inventory.test.db --set NODE_ENV=test",
+    "tcr": "bash scripts/tcr.sh"
   },
   "keywords": [],
   "author": "",
