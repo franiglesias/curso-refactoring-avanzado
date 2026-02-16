@@ -9,7 +9,7 @@ forma gradual y segura.
 Tenemos una función de total de checkout con reglas de impuestos embebidas en línea. El producto
 quiere introducir políticas de impuestos por región (estándar y reducida), pero no debemos romper el
 comportamiento existente. Practicaremos haciendo brotar una nueva abstracción (`TaxPolicy`) y
-enrutar hacia ella de forma incremental.
+movernos hacia ella de forma incremental.
 
 ## Implementación ingenua actual (intencionalmente rígida)
 

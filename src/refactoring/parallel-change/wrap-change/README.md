@@ -1,66 +1,103 @@
-# Técnica de refactorización: Cambio en Paralelo usando Wrap
+# Técnica de refactorización: Wrap
 
-Este ejercicio te ayuda a practicar cómo cambiar la interfaz de una dependencia externa/legada
-introduciendo un wrapper que soporte tanto la API vieja como la nueva, permitiendo migrar los puntos
-de llamada de forma gradual y segura.
+La técnica **Wrap** consiste en envolver una dependencia problemática manteniendo su interfaz existente, pero mejorando su implementación interna (añadiendo validación, logging, retry, caching, etc.) sin romper el código que la usa.
+
+**Clave:** La interfaz pública NO cambia. Los clientes siguen llamando igual, pero ganan funcionalidad.
 
 ## Escenario
 
-Tenemos una función legada para enviar correos utilizada en todo el código. Queremos añadir un `trackingId` obligatorio y soporte de plantillas, pero no podemos actualizar todas las llamadas a la
-vez. Practicaremos creando un wrapper que mantenga la firma antigua funcionando mientras introducimos la nueva.
+Tenemos `LegacyEmailService` (una dependencia externa que NO podemos modificar) que se usa directamente en todo el código. El servicio es limitado: no valida emails, no tiene retry, no tiene logging, no maneja errores bien.
 
-## API legada actual (intencionalmente rígida)
+Queremos mejorar la funcionalidad SIN cambiar todas las llamadas existentes.
 
-En `wrap-change.ts` existe la función `sendEmailLegacy(to, subject, body)` con efectos secundarios
-simulados, y dos puntos de llamada de ejemplo: `notifyWelcome` y `notifyPasswordReset`.
+## Código actual
 
-## Ejercicio: Cambio en Paralelo usando WRAP
+En `wrap-change.ts` existe:
 
-Objetivo: Introducir una API de email más rica sin romper los puntos de llamada existentes.
+- `LegacyEmailService` - servicio externo rígido
+- `notifyWelcome`, `notifyPasswordReset`, `notifyOrderConfirmation` - usan el servicio directamente
 
-### Forma deseada de la nueva API (objetivo)
+## Ejercicio: Aplicar técnica WRAP
+
+**Objetivo:** Crear un wrapper que mantiene la misma interfaz (`sendEmail(to, subject, body)`) pero añade:
+
+- Validación de emails
+- Logging de operaciones
+- Sanitización del contenido
+- Plantillas
+- Manejo de errores mejorado
+
+### Pasos sugeridos
+
+1. **Crear el wrapper** con la misma interfaz que `LegacyEmailService`:
 
 ```ts
-interface EmailMessage {
-  to: string
-  template: 'welcome' | 'password-reset' | 'custom'
-  data?: Record<string, unknown>
-  trackingId: string
-}
+class EmailServiceWrapper {
+  constructor(private legacyService: LegacyEmailService) {
+  }
 
-class Mailer {
-  send(msg: EmailMessage): void {}
+  sendEmail(to: string, subject: string, body: string): string {
+    // Por ahora, solo delegar
+    return this.legacyService.sendEmail(to, subject, body)
+  }
 }
 ```
 
-### Pasos (idealmente con un commit entre cada paso)
+2. **Añadir validación** dentro del wrapper (sin cambiar la interfaz):
+```ts
+sendEmail(to
+:
+string, subject
+:
+string, body
+:
+string
+):
+string
+{
+  if (!this.isValidEmail(to)) {
+    throw new Error(`Invalid email: ${to}`)
+  }
+  return this.legacyService.sendEmail(to, subject, body)
+}
+```
 
-1. Crea un nuevo wrapper `Mailer` que en su constructor reciba una dependencia función para enviar
-   el correo realmente.
+3. **Añadir logging** (sin cambiar la interfaz):
 
-- Debe poder llamar a la función legada internamente para enrutar gradualmente.
-- Mantén el wrapper sin usar al principio para asegurar verde.
+```ts
+sendEmail(to
+:
+string, subject
+:
+string, body
+:
+string
+):
+string
+{
+  console.log(`Sending email to ${to}...`)
+  const result = this.legacyService.sendEmail(to, subject, body)
+  console.log(`Email sent successfully`)
+  return result
+}
+```
 
-2. Introduce una sobrecarga o un método separado en `Mailer` que acepte AMBOS:
+4. **Migrar los puntos de uso** al wrapper uno por uno:
 
-- la nueva forma (`EmailMessage`) y
-- un método de compatibilidad `sendLegacy(to, subject, body)` que reenvíe a `sendEmailLegacy`.
-- Documenta que `sendLegacy` es temporal.
+```ts
+const emailService = new EmailServiceWrapper(new LegacyEmailService())
 
-3. Migra un punto de llamada (`notifyWelcome`) para usar el wrapper con el método legado primero
-   (sin cambio de comportamiento).
-4. Añade soporte de plantillas en `Mailer.send(msg)` mapeando plantillas a subject/body e incluyendo
-   `trackingId` en el cuerpo.
+export function notifyWelcome(userEmail: string): string {
+  return emailService.sendEmail(userEmail, 'Welcome!', 'Thanks for joining our app.')
+}
+```
 
-- Mantén el reenvío de `sendLegacy` intacto.
-
-5. Migra `notifyWelcome` para usar completamente la nueva API (`EmailMessage`) dejando
-   `notifyPasswordReset` en legado.
-6. Finalmente, migra el resto de puntos de llamada y elimina `sendLegacy` del wrapper.
+5. **Añadir más funcionalidad** según necesites (retry, sanitización, plantillas, etc.)
 
 ### Criterios de aceptación
 
-- Mientras la migración está en curso, tanto los llamadores viejos como los nuevos funcionan.
-- No hay cambio de comportamiento en tiempo de ejecución hasta que el paso 5 cambie explícitamente
-  el formato del email.
-- El wrapper aísla el cambio y sirve como la costura entre las APIs vieja y nueva.
+- ✅ La interfaz pública (`sendEmail(to, subject, body)`) NO cambia
+- ✅ Los clientes no necesitan modificarse (solo cambiar la instancia usada)
+- ✅ El wrapper añade funcionalidad (validación, logging, etc.)
+- ✅ El servicio legacy sigue siendo usado internamente
+- ✅ Puedes migrar punto por punto sin romper nada
