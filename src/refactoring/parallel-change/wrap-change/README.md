@@ -31,68 +31,42 @@ En `wrap-change.ts` existe:
 
 1. **Crear el wrapper** con la misma interfaz que `LegacyEmailService`:
 
-```ts
+```typescript
 class EmailServiceWrapper {
-  constructor(private legacyService: LegacyEmailService) {
+  private legacyService: LegacyEmailService;
+
+  constructor(legacyService: LegacyEmailService) {
+    this.legacyService = legacyService;
   }
 
   sendEmail(to: string, subject: string, body: string): string {
-    // Por ahora, solo delegar
     return this.legacyService.sendEmail(to, subject, body)
   }
 }
 ```
 
-2. **Añadir validación** dentro del wrapper (sin cambiar la interfaz):
-```ts
-sendEmail(to
-:
-string, subject
-:
-string, body
-:
-string
-):
-string
-{
-  if (!this.isValidEmail(to)) {
-    throw new Error(`Invalid email: ${to}`)
-  }
-  return this.legacyService.sendEmail(to, subject, body)
-}
+2. **Instanciar el wrapper y reemplazarlo** en `wrap-change.ts`. En este caso simula algo parecido a gestión de dependencias (tienes una instancia global de `EmailServiceWrapper`), pero podrías reemplazarlo en cada punto de uso.
+
+2. **Añadir validación** dentro del wrapper (sin cambiar la interfaz). Para el ejercicio nos basta una validación simple, pero debe estar cubierta por nuevos tests (puedes usar TDD). Los errores de validación se lanzan.
+
+3. **Añadir logging**. Para el ejercicio nos basta con usar `console.log`, pero puedes introducir un Logger propio si quieres. En vitest puedes usar algo como esto para montar tu test:
+
+```typescript
+it('should log actions', () => {
+  const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {
+  })
+
+  notifyWelcome('test@example.com')
+
+  expect(consoleSpy).toHaveBeenCalledWith('Email test@example.com is valid')
+  expect(consoleSpy).toHaveBeenCalledWith('Sending email to test@example.com')
+  consoleSpy.mockRestore()
+}); 
 ```
 
-3. **Añadir logging** (sin cambiar la interfaz):
+4. **Migrar los puntos de uso** al wrapper uno por uno.
 
-```ts
-sendEmail(to
-:
-string, subject
-:
-string, body
-:
-string
-):
-string
-{
-  console.log(`Sending email to ${to}...`)
-  const result = this.legacyService.sendEmail(to, subject, body)
-  console.log(`Email sent successfully`)
-  return result
-}
-```
-
-4. **Migrar los puntos de uso** al wrapper uno por uno:
-
-```ts
-const emailService = new EmailServiceWrapper(new LegacyEmailService())
-
-export function notifyWelcome(userEmail: string): string {
-  return emailService.sendEmail(userEmail, 'Welcome!', 'Thanks for joining our app.')
-}
-```
-
-5. **Añadir más funcionalidad** según necesites (retry, sanitización, plantillas, etc.)
+5. **Añadir más funcionalidad** según necesites (retry, sanitización, plantillas, etc)
 
 ### Criterios de aceptación
 
