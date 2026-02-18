@@ -11,6 +11,12 @@ quiere introducir políticas de impuestos por región (estándar y reducida), pe
 comportamiento existente. Practicaremos haciendo brotar una nueva abstracción (`TaxPolicy`) y
 movernos hacia ella de forma incremental.
 
+## Ejecutar tests
+
+```shell
+npm run test -- src/refactoring/parallel-change/sprout-change/sprout-change.test.ts
+```
+
 ## Implementación ingenua actual (intencionalmente rígida)
 
 En `sprout-change.ts` existe la función `calculateTotal(cart, region)` con lógica de impuestos en

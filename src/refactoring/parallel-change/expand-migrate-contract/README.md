@@ -3,6 +3,7 @@
 Este ejercicio te ayuda a practicar la técnica de **Parallel Change** en su forma más pura:
 expandir la interfaz, migrar los consumidores y contraer la interfaz antigua.
 
+
 ## Escenario
 
 Tenemos una clase `User` con un campo `name` (nombre completo como string único) y **cuatro
@@ -15,6 +16,12 @@ funciones consumidoras** que dependen de ese campo:
 
 **Objetivo**: Refactorizar `name` para que sea `firstName` y `lastName`, aplicando cambio en
 paralelo para no romper nunca los tests.
+
+## Ejecutar tests
+
+```shell
+npm run test -- src/refactoring/parallel-change/expand-migrate-contract/user.test.ts
+```
 
 ## Ejercicio: Expand–Migrate–Contract
 

@@ -4,6 +4,12 @@
 
 Caracterizar el comportamiento actual y establecer una red de seguridad para refactorizar.
 
+## Ejecutar tests
+
+```shell
+npm run test -- src/refactoring/golden-master/golden-master.test.ts
+```
+
 ## Pasos recomendados (haz commits entre pasos)
 
 1. Identificar fuentes de no determinismo que rompen cualquier intento de escribir tests.

@@ -10,6 +10,12 @@ Tenemos `LegacyEmailService` (una dependencia externa que NO podemos modificar) 
 
 Queremos mejorar la funcionalidad SIN cambiar todas las llamadas existentes.
 
+## Ejecutar tests
+
+```shell
+npm run test -- src/refactoring/parallel-change/wrap-change/wrap-change.test.ts
+```
+
 ## Código actual
 
 En `wrap-change.ts` existe:
