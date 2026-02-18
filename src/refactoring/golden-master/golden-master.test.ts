@@ -18,7 +18,7 @@ describe('Receipt Printer', () => {
         it('should print a receipt', () => {
           counter = counter + 1
           const pedido = generateOrder('ORD-' + counter.toString(), customer, item, quantity)
-          expect(new ReceiptPrinter().print(pedido)).matchSnapshot()
+          expect(new ReceiptPrinterForTest().print(pedido)).matchSnapshot()
         })
       })
     })
