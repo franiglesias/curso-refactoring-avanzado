@@ -25,11 +25,7 @@ export class ReceiptPrinter {
       subtotal = round(subtotal + lineTotal)
       return `${idx + 1}. ${it.description} (${it.sku}) x${it.quantity} = $${lineTotal.toFixed(2)}`
     })
-
-    let luckyDiscountPct = 0
-    if (Math.random() < 0.1) {
-      luckyDiscountPct = Math.random() * 0.05
-    }
+    let luckyDiscountPct = this.discount();
     const luckyDiscount = round(subtotal * luckyDiscountPct)
 
     const taxableGeneral = order.items
@@ -53,6 +49,14 @@ export class ReceiptPrinter {
     ]
 
     return [header, ...lines, '---', ...summary].join('\n')
+  }
+
+  protected discount() {
+    let luckyDiscountPct = 0
+    if (Math.random() < 0.1) {
+      luckyDiscountPct = Math.random() * 0.05
+    }
+    return luckyDiscountPct;
   }
 
   protected getCurrentDate() {
