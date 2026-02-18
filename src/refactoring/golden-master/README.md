@@ -16,7 +16,15 @@ npm run test -- src/refactoring/golden-master/golden-master.test.ts
 2. Introducir costuras (SEAMS) mínimas sin cambiar el comportamiento.
   1. Aisla las fuentes no determninistas en métodos protegidos (seams).
   2. Extiende la clase y sobreescribe las costuras para controlar su comportamiento.
-3. Generar un conjunto amplio y estable de entradas.
+3. Generar un conjunto amplio y estable de entradas. Puedes usar esta forma para que el test se ejecute con un value nuevo cada vez:
+
+```typescript
+describe.each(['Ana', 'Luis', 'Mar', 'Iván', 'Sofía'])('Given a customer %s', (customer) => {
+  it('should do something', () => {
+    // Aquí el test
+  });
+});
+```
 4. Capturar la salida maestra.
 5. Escribir la prueba usando como SUT la clase derivada, mediante `expect(texto).toMatchSnapshot()`.
 6. Refactorizar con seguridad para invertir las dependencias.
