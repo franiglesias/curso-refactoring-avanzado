@@ -15,7 +15,7 @@ export type Order = {
 export class ReceiptPrinter {
   // Do not change this function at the beginning of the exercise; first create the Golden Master.
   print(order: Order): string {
-    const now = new Date(Date.now())
+    const now = this.getCurrentDate()
 
     const header = `Recibo ${order.id} - ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`
 
@@ -53,6 +53,10 @@ export class ReceiptPrinter {
     ]
 
     return [header, ...lines, '---', ...summary].join('\n')
+  }
+
+  protected getCurrentDate() {
+    return new Date(Date.now());
   }
 }
 
